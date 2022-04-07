@@ -6,18 +6,26 @@ const {
   updateCourse,
   deleteCourse
 } = require("../controller/courses");
+
+const Course = require('../models/Course')
+const advancedResults = require('../middleware/advanceResults')
+const  { protect } = require('../middleware/auth')
+
 const router = express.Router({ mergeParams: true });
 
 router
 .route('/')
-.get(getCourses)
-.post(addCourse)
+.get(advancedResults(Course,{
+    path: 'bootcamp',
+    select: 'name'
+}), getCourses)
+.post(protect, addCourse)
 
 router
 .route('/:id')
 .get(getCourse)
-.put(updateCourse)
-.delete(deleteCourse)
+.put(protect,updateCourse)
+.delete(protect, deleteCourse)
 
 
 
